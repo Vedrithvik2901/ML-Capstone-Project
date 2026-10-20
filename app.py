@@ -218,7 +218,7 @@ with c2:
         unsafe_allow_html=True,
     )
     if st.button("Open Classification", use_container_width=True):
-        st.switch_page("pages/2_Classification.py")
+        st.switch_page("pages/Classification.py")
 
 with c3:
     st.markdown(
@@ -235,7 +235,7 @@ with c3:
         unsafe_allow_html=True,
     )
     if st.button("Open Clustering", use_container_width=True):
-        st.switch_page("pages/3_Clustering.py")
+        st.switch_page("pages/Clustering.py")
 
 st.divider()
 
