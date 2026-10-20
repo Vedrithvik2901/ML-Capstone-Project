@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
+from utils.layout import render_sidebar
+
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 
@@ -16,7 +18,10 @@ st.set_page_config(
     page_title="Visualizations | ML Capstone Project",
     page_icon="📊",
     layout="wide",
+    initial_sidebar_state="expanded",
 )
+
+render_sidebar()
 
 # --------------------------------------------------
 # Styling

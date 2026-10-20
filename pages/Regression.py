@@ -7,6 +7,8 @@ import pandas as pd
 import streamlit as st
 from scipy import sparse
 
+from utils.layout import render_sidebar
+
 
 # --------------------------------------------------
 # Paths and page configuration
@@ -19,7 +21,10 @@ st.set_page_config(
     page_title="Regression | ML Explorer",
     page_icon="🏠",
     layout="wide",
+    initial_sidebar_state="expanded",
 )
+
+render_sidebar()
 
 st.title("Regression")
 st.caption("Melbourne Housing · Explore data, compare models, predict prices")

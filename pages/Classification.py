@@ -22,6 +22,8 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 import matplotlib.pyplot as plt
 
+from utils.layout import render_sidebar
+
 
 # --------------------------------------------------
 # Page configuration
@@ -30,7 +32,10 @@ st.set_page_config(
     page_title="Classification | ML Capstone Explorer",
     page_icon="🎯",
     layout="wide",
+    initial_sidebar_state="expanded",
 )
+
+render_sidebar()
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_PATH = ROOT / "data" / "classification" / "bank-full.csv"

@@ -17,6 +17,8 @@ from sklearn.metrics import (
     calinski_harabasz_score,
 )
 
+from utils.layout import render_sidebar
+
 warnings.filterwarnings("ignore", category=UserWarning)
 
 # ---------------------------------------------------------
@@ -26,7 +28,10 @@ st.set_page_config(
     page_title="Clustering | ML Capstone Explorer",
     page_icon="🔍",
     layout="wide",
+    initial_sidebar_state="expanded",
 )
+
+render_sidebar()
 
 st.title("🔍 Customer Segmentation")
 st.caption(
