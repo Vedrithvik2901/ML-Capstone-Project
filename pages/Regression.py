@@ -157,6 +157,7 @@ MODEL_FILES = {
     "K-Nearest Neighbors": "knn_regressor.joblib",
     "Support Vector Regression": "svr.joblib",
     "Polynomial Regression": "polynomial_regression.joblib",
+    "Random Forest": "random_forest_regressor.joblib"
 }
 
 
