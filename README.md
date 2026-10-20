@@ -1,5 +1,5 @@
 # Capstone Project
-## Machine Learning Algorithms Review 1 
+## Machine Learning Algorithms Review 1
 
 Implementation of the Machine Learning Capstone Project for the course **23CSE301_ML_26_27**.
 
@@ -9,14 +9,31 @@ The project explores and compares multiple algorithms across three core machine 
 - **Classification** — Bank Marketing dataset
 - **Clustering** — Online Retail dataset
 
-Each task is organised into its corresponding dataset and notebook. The goal is not simply to crown one algorithm king of the spreadsheet castle, but to understand how different algorithms behave across different datasets and problem types.
+Each task is organised into its corresponding dataset, notebook, saved model artifacts, and an interactive page. The goal is not simply to crown one algorithm king of the spreadsheet castle, but to understand how different algorithms behave across different datasets and problem types.
+
+In addition to the notebooks, the repository includes an interactive **Streamlit application** (`app.py` and `pages/`) for exploring each dataset, comparing saved models, and generating predictions or customer segments.
 
 ---
 
 ## 1. Repository Structure
 
 ```text
-ML-Algorithms-Review/
+ML-Capstone-Project/
+│
+├── app.py                      # Streamlit landing page
+├── check_reg_models.py         # Sanity check: loads saved models and prints class / feature count
+├── requirements.txt
+├── README.md
+│
+├── pages/                      # Streamlit pages (one per ML track)
+│   ├── Regression.py
+│   ├── Classification.py
+│   └── Clustering.py
+│
+├── models/                     # 26 saved .joblib artifacts (see Section 5.2)
+│
+├── utils/
+│   └── __init__.py
 │
 ├── data/
 │   ├── classification/
@@ -29,29 +46,28 @@ ML-Algorithms-Review/
 │   └── regression/
 │       └── Melbourne_housing.csv
 │
-├── notebooks/
-│   ├── classification.ipynb
-│   └── regression.ipynb
-│
-├── .gitignore
-├── README.md
-└── requirements.txt
+└── notebooks/
+    ├── classification.ipynb
+    └── regression.ipynb
 ```
 
-The repository separates datasets and notebooks by machine learning task, which keeps implementations and supporting files easy to reproduce and navigate:
+The repository separates datasets, notebooks, and saved models by machine learning task, which keeps implementations and supporting files easy to reproduce and navigate:
 
 ```text
 Regression
-    └── Melbourne Housing
-        └── notebooks/regression.ipynb
+    ├── Melbourne Housing
+    ├── notebooks/regression.ipynb
+    └── pages/Regression.py
 
 Classification
-    └── Bank Marketing
-        └── notebooks/classification.ipynb
+    ├── Bank Marketing
+    ├── notebooks/classification.ipynb
+    └── pages/Classification.py
 
 Clustering
-    └── Online Retail
-        └── data/clustering/Online Retail.xlsx
+    ├── Online Retail
+    ├── data/clustering/Online Retail.xlsx
+    └── pages/Clustering.py
 ```
 
 ---
@@ -234,6 +250,29 @@ Important Random Forest features include variables related to:
 
 Feature importance is interpreted as a model-specific measure and does not imply a causal relationship.
 
+### 2.10 Interactive Regression Page
+
+`pages/Regression.py` provides three tabs:
+
+- **Overview** — dataset file name, row count, and summary information.
+- **Explore data** — interactive exploration of the Melbourne Housing data.
+- **Predict a price** — a form for entering property details and estimating a sale price with a selected saved model.
+
+The prediction form collects rooms, bedrooms, bathrooms, car spaces, distance from the city, land size, building area, year built, sale year, latitude and longitude, property count, suburb, region, postcode, council area, property type, selling method, seller, and parking area. `PropertyAge` is computed from the sale year and year built, and the input is rejected if the sale year precedes the year built.
+
+Inputs are transformed with the saved `housing_preprocessor.joblib`, so the page applies the same preprocessing as the notebook. Model-specific handling is included where the training workflow required it:
+
+- **Polynomial Regression** — numerical features are expanded using the saved `polynomial_artifacts.joblib` before being recombined with the remaining encoded features.
+- **Support Vector Regression** — because the SVR was trained on a scaled target, predictions are passed through `svr_target_scaler.joblib` to return prices in Australian dollars.
+
+The predicted price is a model estimate, not a property valuation.
+
+Models available in the prediction form:
+
+Linear Regression, Ridge Regression, Lasso Regression, Elastic Net, Decision Tree, Gradient Boosting, K-Nearest Neighbors, Support Vector Regression, and Polynomial Regression.
+
+> Random Forest, the best-performing model in Section 2.6, is not currently selectable in the prediction form.
+
 ---
 
 ## 3. Classification
@@ -244,10 +283,12 @@ The classification task uses the **Bank Marketing** dataset, which contains demo
 
 ```text
 data/classification/bank.csv        # initial experimentation
-data/classification/bank-full.csv   # final classification analysis
+data/classification/bank-full.csv   # final classification analysis and Streamlit page
 ```
 
-Target variable:
+The files are semicolon-separated.
+
+Target variable (`y`):
 
 - `yes` — Customer subscribed to a term deposit
 - `no` — Customer did not subscribe
@@ -273,7 +314,12 @@ Develop machine learning models that predict whether a customer will subscribe t
 13. Tune selected hyperparameters
 14. Compare model performance
 
-Categorical variables are encoded so that they can be used by the machine learning algorithms, while numerical features are appropriately preprocessed.
+Preprocessing summary:
+
+- A feature, `previously_contacted`, is derived from `pdays` (`1` when `pdays` is not `-1`, otherwise `0`).
+- Numerical features are standardised with `StandardScaler`.
+- Categorical features are encoded with `OneHotEncoder(handle_unknown="ignore")`.
+- A stratified **80:20 train-test split** with `random_state=42` is used, so the class balance is preserved in both splits.
 
 ### 3.4 Classification Algorithms
 
@@ -284,6 +330,13 @@ Categorical variables are encoded so that they can be used by the machine learni
 | 3 | Gaussian Naive Bayes | Examine the conditional independence assumption |
 | 4 | Decision Tree Classifier | Tune `max_depth`; visualise the tree |
 | 5 | Support Vector Machine (SVC) | Tune `C` and kernel; scale features |
+| 6 | Random Forest | Bagged ensemble of decision trees |
+| 7 | AdaBoost | Sequential boosting of weak learners |
+| 8 | Gradient Boosting | Boosted tree ensemble |
+| 9 | Bagging Classifier | Bootstrap aggregation of base classifiers |
+| 10 | Multi-Layer Perceptron (MLP) | Feed-forward neural network |
+
+Algorithms 1–5 form the required Part A set. Algorithms 6–10 are additional saved models that are also available in the interactive Streamlit page.
 
 Detailed model outputs and visualizations are available in `notebooks/classification.ipynb`.
 
@@ -307,8 +360,20 @@ The dataset contains substantially more customers who did not subscribe to a ter
 - Recall and F1 score are important for evaluating performance on the minority class.
 - Hyperparameter tuning can change the balance between precision, recall, and overall accuracy.
 - Different algorithms may be preferable depending on whether the priority is reducing false positives or identifying more potential subscribers.
+- The `duration` feature (last contact duration in seconds) is only known after a call has taken place, so predictions that rely on it are not realistic for deciding whom to call in advance.
 
 The project therefore compares models using multiple evaluation metrics rather than selecting a model based solely on accuracy.
+
+### 3.7 Interactive Classification Page
+
+`pages/Classification.py` ("Classification Studio") provides four tabs:
+
+- **Overview** — dataset description, target distribution, feature types, a dataset preview, and summary statistics.
+- **Explore Data** — individual feature distributions and feature-versus-subscription comparisons.
+- **Evaluate Models** — select any of the ten saved classifiers and evaluate them on the stratified 20% test split, with accuracy, precision, recall, and F1 for the `yes` class, plus a confusion matrix and classification report.
+- **Predict** — enter a customer's details and obtain the selected model's subscription prediction.
+
+The page rebuilds the notebook's preprocessing pipeline (scaling and one-hot encoding) from the dataset, so the saved models receive the same feature representation used during training.
 
 ---
 
@@ -326,28 +391,117 @@ Because clustering is an unsupervised learning task, no target variable is requi
 
 ### 4.2 Problem Statement
 
-Identify meaningful groups within the retail data based on customer or transactional characteristics. The clustering workflow includes data preparation, feature construction, exploratory analysis, clustering, and interpretation of the resulting groups.
+Identify meaningful groups of customers based on their purchasing behaviour. The clustering workflow includes data preparation, feature construction, exploratory analysis, clustering, and interpretation of the resulting groups.
+
+### 4.3 Data Preparation
+
+Transaction records are cleaned and aggregated into customer-level features:
+
+1. Duplicate transactions are removed.
+2. Rows without a `CustomerID` are removed, since customer-level aggregation requires it.
+3. Cancelled invoices (invoice numbers starting with `C`) are removed.
+4. Rows with non-positive `Quantity` or `UnitPrice` are removed.
+5. A `Sales` value (`Quantity × UnitPrice`) is calculated for each transaction line.
+6. Transactions are aggregated per customer into four features.
+7. Infinite, missing, and non-positive feature values are removed.
+8. Features are transformed with `log1p` to reduce skew, then standardised with `StandardScaler`.
+
+### 4.4 Customer Features
+
+| Feature | Meaning |
+|---|---|
+| `Frequency` | Number of distinct invoices for a customer |
+| `Monetary` | Total sales value associated with the customer |
+| `AverageOrderValue` | Monetary value divided by invoice frequency |
+| `UniqueProducts` | Number of distinct products purchased |
+
+### 4.5 Clustering Algorithms
+
+| # | Algorithm | Notes |
+|---|-----------|-------|
+| 1 | K-Means Clustering | Partitions customers into a predefined number of clusters by minimising within-cluster squared distances; the saved model can assign a new transformed customer profile |
+| 2 | Agglomerative Clustering | Builds clusters hierarchically by repeatedly merging groups; has no `predict()` method, so it cannot assign unseen customers directly |
+
+### 4.6 Clustering Evaluation
+
+Because there are no ground-truth labels, clusterings are compared using internal validity metrics:
+
+- **Silhouette Score** — how well each customer fits its own cluster compared with the nearest other cluster (higher is better).
+- **Davies-Bouldin Index** — average similarity between each cluster and its most similar cluster (lower is better).
+- **Calinski-Harabasz Score** — ratio of between-cluster to within-cluster dispersion (higher is better).
+
+### 4.7 Interactive Clustering Page
+
+`pages/Clustering.py` ("Customer Segmentation") provides four tabs:
+
+- **Overview** — project description, algorithm summaries, feature definitions, and a data cleaning summary showing how many transactions and customers remain after each step.
+- **Explore Data** — a customer feature sample, descriptive statistics, feature distributions, a correlation view, and the log-transformed features.
+- **Cluster Analysis** — choose K-Means or Agglomerative Clustering, then view the evaluation metrics, cluster sizes, a two-dimensional PCA projection of the clusters, median feature profiles per cluster, and a browsable table of assigned customers.
+- **Customer Segmentation** — select an existing `CustomerID` to see its features and assigned cluster, or enter the four feature values for a new customer profile and have K-Means assign it to a cluster.
+
+The page reproduces the notebook's cleaning, aggregation, `log1p`, and scaling pipeline. For Agglomerative Clustering, which cannot predict on new data, the page re-fits the model with three clusters on the prepared data to obtain labels.
 
 ---
 
-## 5. Technologies and Libraries
+## 5. Interactive Application
+
+### 5.1 Streamlit Application
+
+The Streamlit app is a multi-page workspace with a dark theme.
+
+- `app.py` is the landing page. It shows the number of datasets and saved model artifacts found in the repository, cards linking to each track, and tables listing the available datasets and `.joblib` files.
+- `pages/Regression.py`, `pages/Classification.py`, and `pages/Clustering.py` are the three track pages described in Sections 2.10, 3.7, and 4.7.
+- `check_reg_models.py` is a standalone script that loads selected saved models and prints their class and expected number of input features, which is useful for diagnosing artifact or version problems.
+
+Run it from the repository root:
+
+```bash
+streamlit run app.py
+```
+
+### 5.2 Saved Model Artifacts
+
+The `models/` directory contains 26 serialised `.joblib` files.
+
+| Track | Artifacts |
+|---|---|
+| Regression | `linear_regression`, `ridge_regression`, `lasso_regression`, `elasticnet_regression`, `decision_tree_regressor`, `gradient_boosting_regressor`, `knn_regressor`, `svr`, `polynomial_regression` |
+| Regression support | `housing_preprocessor` (fitted preprocessing pipeline), `polynomial_artifacts` (polynomial transformer and column indices), `svr_target_scaler` (target scaler for SVR) |
+| Classification | `logistic_regression`, `knn`, `decision_tree_classifier`, `gaussian_nb`, `svm`, `random_forest`, `adaboost`, `gradient_boosting_classifier`, `bagging`, `mlp_classifier` |
+| Clustering | `kmeans_clustering`, `agglomerative_clustering` |
+| Other | `decision_tree`, `gradient_boosting` (referenced only by `check_reg_models.py`) |
+
+Saved models should be loaded with the same scikit-learn version used to train them; a mismatch can cause load warnings or errors.
+
+---
+
+## 6. Technologies and Libraries
+
+**Machine learning and analysis**
 
 - Python
 - Jupyter Notebook
 - pandas
 - NumPy
+- SciPy
 - Matplotlib
 - Seaborn
 - scikit-learn
+- joblib
+- openpyxl (reading the Online Retail Excel file)
+
+**Interactive application**
+
+- Streamlit
 
 ---
 
-## 6. Environment Setup and How to Run
+## 7. Environment Setup and How to Run
 
 1. Clone the repository:
 
 ```bash
-git clone <https://github.com/Vedrithvik2901/ML-Capstone-Project.git>
+git clone https://github.com/Vedrithvik2901/ML-Capstone-Project.git
 cd ML-Capstone-Project
 ```
 
@@ -359,10 +513,11 @@ pip install -r requirements.txt
 
 3. Ensure that the datasets are present in the corresponding `data/` directories.
 
+4. Choose how to explore the project:
 
-4. Open the required notebook from `notebooks/` and run it from top to bottom.
+**Notebooks**
 
-Available notebooks:
+Open the required notebook from `notebooks/` and run it from top to bottom.
 
 ```text
 notebooks/regression.ipynb
@@ -371,17 +526,27 @@ notebooks/classification.ipynb
 
 The notebooks contain the complete implementation, including data preparation, analysis, model training, evaluation, and visualizations.
 
+**Streamlit application**
+
+```bash
+streamlit run app.py
+```
+
 ---
 
-## 7. Reproducibility
+## 8. Reproducibility
 
 A fixed `random_state=42` is used where applicable to make experiments reproducible.
 
 For the regression task, all models use the same 80:20 train-test split and the same held-out test set to ensure a consistent comparison. Preprocessing transformations are fitted using training data before being applied to the test data.
 
+For the classification task, the 80:20 split is stratified on the target so that class proportions are preserved.
+
+The Streamlit pages reconstruct the notebooks' preprocessing and splits so that the saved models are evaluated and queried consistently with the notebook results.
+
 ---
 
-## 8. Project Goals
+## 9. Project Goals
 
 This repository provides hands-on practice with:
 
@@ -397,10 +562,11 @@ This repository provides hands-on practice with:
 - Hyperparameter tuning
 - Model evaluation
 - Algorithm comparison
+- Model persistence and use in an interactive Streamlit application
 
 ---
 
-## 9. AI Assistance
+## 10. AI Assistance
 
 Generative AI tools were used as an assistance resource during development of the project, primarily for code scaffolding, debugging support, explanation of machine learning concepts, and documentation assistance.
 
@@ -408,7 +574,7 @@ The analysis, model evaluation, interpretation of results, and final project dec
 
 ---
 
-## 10. Git and Version History
+## 11. Git and Version History
 
 The project was developed incrementally using Git. Meaningful commits were maintained throughout development to document major stages such as:
 
@@ -421,16 +587,23 @@ The project was developed incrementally using Git. Meaningful commits were maint
 - Model implementation
 - Hyperparameter tuning
 - Model evaluation
+- Interactive application development
 - Documentation
 
 The repository therefore maintains a traceable development history rather than relying on a single final commit.
 
 ---
 
-## 11. Project Status
+## 12. Project Status
 
-- **Regression:** Complete — all ten required regression algorithms, model comparison, hyperparameter tuning, and cross-validation.
-- **Classification:** Review 1 implementation complete — the five required Part A classification algorithms and the full evaluation workflow.
-- **Clustering:** Dataset integrated; clustering analysis is under development.
+- **Regression:** Complete — all ten required regression algorithms, model comparison, hyperparameter tuning, and cross-validation. Nine of the ten models are available in the interactive prediction page.
+- **Classification:** The five required Part A algorithms and the full evaluation workflow are complete. Five additional models (Random Forest, AdaBoost, Gradient Boosting, Bagging, and MLP) are saved and available in the interactive page.
+- **Clustering:** K-Means and Agglomerative Clustering are implemented on customer-level features, evaluated with internal validity metrics, and available in the interactive page.
+- **Interactive application:** Streamlit pages for all three tracks are in place.
 
-The project will continue to be updated as additional analysis, clustering models, evaluation results, and documentation are completed.
+Known limitations:
+
+- Classification predictions that use `duration` are not realistic for pre-call targeting.
+- Predicted house prices are model estimates, not valuations.
+
+The project will continue to be updated as additional analysis, evaluation results, and documentation are completed.
