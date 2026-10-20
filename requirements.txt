@@ -1,7 +1,10 @@
-pandas 
+pandas
 numpy
+scipy
 matplotlib
 seaborn
 scikit-learn
 jupyter
 joblib
+openpyxl
+streamlit
