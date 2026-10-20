@@ -145,17 +145,21 @@ with data_tab:
 # --------------------------------------------------
 # Model definitions
 # --------------------------------------------------
+
+
 MODEL_FILES = {
     "Linear Regression": "linear_regression.joblib",
     "Ridge Regression": "ridge_regression.joblib",
     "Lasso Regression": "lasso_regression.joblib",
     "Elastic Net": "elasticnet_regression.joblib",
-    "Decision Tree": "decision_tree.joblib",
-    "Gradient Boosting": "gradient_boosting.joblib",
+    "Decision Tree": "decision_tree_regressor.joblib",
+    "Gradient Boosting": "gradient_boosting_regressor.joblib",
     "K-Nearest Neighbors": "knn_regressor.joblib",
     "Support Vector Regression": "svr.joblib",
     "Polynomial Regression": "polynomial_regression.joblib",
 }
+
+
 
 
 # --------------------------------------------------
