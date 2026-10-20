@@ -25,14 +25,14 @@ st.markdown(
     """
     <style>
     :root {
-        --page-bg: #111318;
-        --surface: #1b1e25;
-        --surface-hover: #222630;
-        --border: #303540;
-        --text: #f3f4f6;
-        --muted: #a0a6b4;
-        --accent: #a3e635;
-        --accent-dark: #1d2a13;
+        --page-bg: #f5f6f2;
+        --surface: #ffffff;
+        --surface-hover: #eef1ea;
+        --border: #c8d3c8;
+        --text: #004b36;
+        --muted: #5f7469;
+        --accent: #d4b26f;
+        --accent-dark: #8a9a86;
     }
 
     .stApp {
@@ -50,7 +50,7 @@ st.markdown(
     }
 
     [data-testid="stSidebar"] {
-        background: #191c23;
+        background: #e7ece3;
         border-right: 1px solid var(--border);
     }
 
@@ -74,10 +74,10 @@ st.markdown(
         background:
             radial-gradient(
                 circle at 90% 10%,
-                rgba(163, 230, 53, 0.12),
+                rgba(212, 178, 111, 0.20),
                 transparent 35%
             ),
-            linear-gradient(135deg, #1c2028, #15171d);
+            linear-gradient(135deg, #ffffff, #eef1ea);
     }
 
     .eyebrow {
@@ -108,10 +108,10 @@ st.markdown(
         display: inline-block;
         margin-top: 0.5rem;
         padding: 0.45rem 0.75rem;
-        border: 1px solid #414a35;
+        border: 1px solid #b7c3b2;
         border-radius: 999px;
-        background: #1c2418;
-        color: #d9f99d;
+        background: #e7ece3;
+        color: var(--text);
         font-size: 0.78rem;
     }
 
@@ -147,7 +147,7 @@ st.markdown(
     }
 
     .track-card:hover {
-        border-color: #586246;
+        border-color: var(--accent-dark);
         background: var(--surface-hover);
         transform: translateY(-2px);
     }
@@ -177,7 +177,7 @@ st.markdown(
     .track-tag {
         margin-top: auto;
         padding-top: 1rem;
-        color: #d9f99d;
+        color: var(--text);
         font-size: 0.78rem;
         font-weight: 650;
     }
@@ -207,26 +207,26 @@ st.markdown(
     }
 
     .stButton > button[kind="primary"] {
-        border: 1px solid #b5ef65;
+        border: 1px solid #c59e55;
         background: var(--accent);
-        color: #17200d;
+        color: var(--text);
     }
 
     .stButton > button[kind="primary"]:hover {
-        border-color: #c9f78b;
-        background: #b5ef65;
-        color: #17200d;
+        border-color: #b98f45;
+        background: #e0c58e;
+        color: var(--text);
     }
 
     .stButton > button[kind="secondary"] {
-        border: 1px solid #414651;
-        background: #20242d;
+        border: 1px solid var(--accent-dark);
+        background: #e7ece3;
         color: var(--text);
     }
 
     .stButton > button[kind="secondary"]:hover {
-        border-color: #707b8d;
-        color: white;
+        border-color: var(--text);
+        color: var(--text);
     }
 
     .workflow-card {
@@ -302,20 +302,20 @@ st.markdown(
     width: 100%;
     margin: 0 0 1rem;
     padding: 1.4rem 1.6rem;
-    border: 1px solid #303540;
+    border: 1px solid var(--border);
     border-radius: 14px;
-    background: #1b1e25;
+    background: var(--surface);
     transition: border-color 0.2s ease, background 0.2s ease;
 }
 
 .team-member-card:hover {
-    border-color: #586246;
-    background: #20242c;
+    border-color: var(--accent-dark);
+    background: var(--surface-hover);
 }
 
 .team-member-number {
     margin-bottom: 0.6rem;
-    color: #a3e635;
+    color: var(--accent);
     font-size: 0.72rem;
     font-weight: 750;
     letter-spacing: 0.12em;
@@ -323,20 +323,20 @@ st.markdown(
 
 .team-member-card h3 {
     margin: 0 0 0.35rem;
-    color: #f3f4f6;
+    color: var(--text);
     font-size: 1.2rem;
 }
 
 .team-member-role {
     margin-bottom: 0.65rem;
-    color: #d9f99d;
+    color: var(--text);
     font-size: 0.9rem;
     font-weight: 600;
 }
 
 .team-member-card p {
     margin: 0;
-    color: #a0a6b4;
+    color: var(--muted);
     font-size: 0.92rem;
     line-height: 1.65;
 }
@@ -344,14 +344,14 @@ st.markdown(
 .github-link {
     display: inline-block;
     margin-top: 0.9rem;
-    color: #a3e635;
+    color: var(--accent);
     font-size: 0.88rem;
     font-weight: 650;
     text-decoration: none;
 }
 
 .github-link:hover {
-    color: #c9f78b;
+    color: #b98f45;
     text-decoration: underline;
 }
 

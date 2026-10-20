@@ -14,31 +14,32 @@ def render_sidebar() -> None:
         }
 
         [data-testid="stSidebar"] {
-            background: #191c23;
-            border-right: 1px solid #303540;
+            background: #e7ece3;
+            border-right: 1px solid #c8d3c8;
         }
 
         [data-testid="stSidebar"] .stMarkdown p,
         [data-testid="stSidebar"] [data-testid="stCaptionContainer"] {
-            color: #a0a6b4;
+            color: #5f7469;
         }
 
         [data-testid="stSidebar"] .stButton > button {
             min-height: 44px;
-            border: 1px solid #414651;
+            border: 1px solid #8a9a86;
             border-radius: 10px;
-            background: #20242d;
-            color: #f3f4f6;
+            background: #f5f6f2;
+            color: #004b36;
             font-weight: 650;
         }
 
         [data-testid="stSidebar"] .stButton > button:hover {
-            border-color: #707b8d;
-            color: #ffffff;
+            border-color: #004b36;
+            background: #ffffff;
+            color: #004b36;
         }
 
         [data-testid="stSidebar"] hr {
-            border-color: #303540;
+            border-color: #c8d3c8;
         }
         </style>
         """,

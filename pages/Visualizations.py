@@ -30,26 +30,26 @@ st.markdown(
     """
     <style>
     .stApp {
-        background: #111318;
-        color: #f3f4f6;
+        background: #f5f6f2;
+        color: #004b36;
     }
 
     .viz-hero {
         padding: 1.8rem 2rem;
         margin-bottom: 1.5rem;
-        border: 1px solid #303540;
+        border: 1px solid #c8d3c8;
         border-radius: 18px;
         background:
             radial-gradient(
                 circle at 90% 10%,
-                rgba(163, 230, 53, 0.10),
+                rgba(212, 178, 111, 0.20),
                 transparent 35%
             ),
-            #1b1e25;
+            #ffffff;
     }
 
     .viz-eyebrow {
-        color: #a3e635;
+        color: #d4b26f;
         font-size: 0.75rem;
         font-weight: 750;
         letter-spacing: 0.14em;
@@ -63,13 +63,13 @@ st.markdown(
 
     .viz-hero p {
         max-width: 760px;
-        color: #a0a6b4;
+        color: #5f7469;
         line-height: 1.7;
     }
 
     div[data-testid="stMetric"] {
-        background: #1b1e25;
-        border: 1px solid #303540;
+        background: #ffffff;
+        border: 1px solid #c8d3c8;
         border-radius: 12px;
         padding: 1rem;
     }
@@ -311,7 +311,7 @@ if selected == "Regression · Melbourne Housing":
                 ].values
                 for t in types
             ],
-            labels=types,
+            label=types,
             showfliers=False
         )
         ax.set_xlabel("Property Type")
