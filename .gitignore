@@ -18,3 +18,12 @@ env/
 Thumbs.db
 # Local model backups
 models_backup/
+
+# Node.js dependencies from the removed frontend
+node_modules/
+
+# Streamlit secrets
+.streamlit/secrets.toml
+
+# Local environment files
+.env
