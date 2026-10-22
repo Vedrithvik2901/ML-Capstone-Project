@@ -579,19 +579,43 @@ elif selected == "Classification · Bank Marketing":
             "Outcome": target
         }).dropna()
 
-        outcomes = sorted(plot_data["Outcome"].unique())
+        
+    outcomes = sorted(plot_data["Outcome"].unique())
+
+    box_data = [
+        plot_data.loc[
+            plot_data["Outcome"] == outcome, "Feature"
+        ].dropna().to_numpy()
+        for outcome in outcomes
+    ]
+
+    nonempty = [
+        (outcome, values)
+        for outcome, values in zip(outcomes, box_data)
+        if len(values) > 0
+    ]
+
+    if nonempty:
+        outcomes, box_data = zip(*nonempty)
 
         fig, ax = plt.subplots(figsize=(8, 4))
         ax.boxplot(
-            [
-                plot_data.loc[
-                    plot_data["Outcome"] == outcome, "Feature"
-                ].values
-                for outcome in outcomes
-            ],
-            labels=outcomes,
+            box_data,
+            tick_labels=list(outcomes),
             showfliers=False
         )
+        ax.set_xlabel("Subscription Outcome")
+        ax.set_ylabel(selected_feature)
+        ax.set_title(f"{selected_feature} by Subscription Outcome")
+        fig.tight_layout()
+        st.pyplot(fig)
+        plt.close(fig)
+    else:
+        st.info(
+            f"No valid numeric values are available for {selected_feature} "
+            "to compare by subscription outcome."
+        )
+
         ax.set_xlabel("Subscription Outcome")
         ax.set_ylabel(selected_feature)
         ax.set_title(f"{selected_feature} by Subscription Outcome")
